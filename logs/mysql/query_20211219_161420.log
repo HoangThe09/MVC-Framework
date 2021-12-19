@@ -1,0 +1,1 @@
+{"logMessage":"SLOW SQL","logDateTime":"2021-12-19 16:14:20","data":{"sql":"SELECT FROM posts WHERE id  =  'desc' ORDER BY id desc LIMIT 0, 10","time":"0.10 ms"}}

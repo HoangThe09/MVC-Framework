@@ -1,0 +1,1 @@
+{"logMessage":"SLOW SQL","logDateTime":"2021-12-19 16:48:35","data":{"sql":"SELECT * FROM posts WHERE is_deleted  =  0 AND url  =  'https:\/\/hvthe.com' ORDER BY id desc LIMIT 0, 12","time":"255.94 ms"}}

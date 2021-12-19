@@ -1,0 +1,41 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.main{
+    margin: 50px 0;
+}
+a{
+    text-decoration: none !important;
+    color: #333 !important;
+}
+.form_input{
+    max-width: 800px;
+    margin: 50px auto;
+
+}
+.news__item{
+    margin-top: 10px;
+    padding-top: 10px;
+}
+.news__preview{
+    height: 312px;
+    transition: opacity 0.5s;
+}
+.news__result{
+    padding: 8px;
+}
+h3{
+    font-size: 15px;
+}
+p{
+    font-size: 12px;
+}
+p span{
+    color: #757575;
+    text-transform: uppercase;
+    margin-right: 5px;
+}
+.news_img{
+    margin-bottom: 8px;
+}
