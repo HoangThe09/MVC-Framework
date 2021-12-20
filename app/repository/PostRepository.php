@@ -34,5 +34,10 @@ class PostRepository
         return $posts;
     }
 
+    public function delete($id)
+    {
+        return $this->model->delete($id);
+    }
+
     
 }
