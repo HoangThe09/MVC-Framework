@@ -43,10 +43,10 @@ abstract class Model
         $this->afterInsert();
     }
 
-    public function update($data = [])
+    public function update($id, $data = [])
     {
         $this->beforeUpdate();
-        $this->db->update($data);
+        $this->db->update($id, $data);
         $this->afterUpdate();
     }
 
@@ -57,4 +57,9 @@ abstract class Model
         $this->afterDelete();
     }
 
+    public function getById($id)
+    {
+        $result = $this->db->getById($id);
+        return $result;
+    }
 }

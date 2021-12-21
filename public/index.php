@@ -11,6 +11,7 @@ spl_autoload_register(function ($class){
 });
 // Get url
 $url = $_SERVER['PATH_INFO'] ?? '';
-$url = rtrim($url, '/');
+$url = rtrim($url, '/') ?: '/';
 // Routing
 $router = new Router($url);
+

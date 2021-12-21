@@ -17,14 +17,19 @@ class TaskRepository
         return $this->model->fetchAll($select, $where, $order, $limit);
     }
 
-    public function getId($id)
+    public function getById($id)
     {
+        return $this->model->getById($id);
+    }
 
+    public function stored($data)
+    {
+        return $this->model->insert($data);
     }
 
     public function update($data)
     {
-
+        return $this->model->update($data);
     }
 
     public function delete($id)
