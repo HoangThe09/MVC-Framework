@@ -1,1 +1,0 @@
-{"logMessage":"SLOW SQL","logDateTime":"2021-12-19 16:06:49","data":{"sql":"SELECT * FROM posts ORDER BY  LIMIT 20, 10","time":"1.71 ms"}}
