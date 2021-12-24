@@ -22,18 +22,18 @@ class TaskRepository
         return $this->model->getById($id);
     }
 
-    public function stored($data)
+    public function stored($data, &$newId)
     {
-        return $this->model->insert($data);
+        return $this->model->insert($data, $newId);
     }
 
-    public function update($data)
+    public function update($id, $data)
     {
-        return $this->model->update($data);
+        return $this->model->update($id, $data);
     }
 
     public function delete($id)
     {
-
+        return $this->model->delete($id);
     }
 }

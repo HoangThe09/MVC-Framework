@@ -40,6 +40,11 @@ class DB
      * @param int $limit
      */
 
+    public function table($table){
+        $this->table = $table;
+        return $this;
+    }
+    
     public function fetchAll($select = ['*'],$where = [], $order = ['id', 'desc'], $limit = [0,10])
     {
         return $this->select($select)->where($where, $order, $limit)->get();
@@ -63,7 +68,7 @@ class DB
      * @param array $data['field]
      */
 
-    public function insert($data = [])
+    public function insert($data = [], &$newId)
     {
         if($data == null){
             return false;
@@ -77,7 +82,9 @@ class DB
         $into = trim($into, ', ').")";
         $values = trim($values, ', ').")";
         $sql = "$into $values";
-        $this->executeQuery($sql);
+        $statements = $this->executeQuery($sql);
+        $newId = $this->db->lastInsertId();
+        return $statements;
     }
 
     /**
@@ -106,7 +113,7 @@ class DB
      */
     public function delete($id)
     {
-        $sql = "DELETE FROM news WHERE id = $id";
+        $sql = "DELETE FROM $this->table WHERE id = $id";
         return $this->executeQuery($sql);
     }
 
@@ -187,11 +194,15 @@ class DB
     {
         $statements = $this->db->prepare($sql);
         $start = microtime(true) * 1000;
-        $statements->execute();
+        $check = $statements->execute();
         $end = microtime(true) * 1000;
         $executeTime = number_format($end - $start,2);
         $this->writeLog($executeTime, $sql);
-        return $statements;
+        if($check){
+            return $statements;
+        }else{
+            return false;
+        }
 
     }
 

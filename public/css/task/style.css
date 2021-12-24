@@ -1,0 +1,28 @@
+#list1 .form-control {
+    border-color: transparent;
+}
+
+#list1 .form-control:focus {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+#list1 .select-input.form-control[readonly]:not([disabled]) {
+    background-color: #fbfbfb;
+}
+
+.main{
+    max-width: 700px;
+}
+.item__task{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5px 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.tasks__title{
+    flex: 1;
+    margin-left: 30px;
+}

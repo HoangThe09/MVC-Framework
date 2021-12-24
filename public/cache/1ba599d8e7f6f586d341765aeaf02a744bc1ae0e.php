@@ -1,0 +1,1 @@
+test <?php echo e(name); ?><?php /**PATH C:\Users\hvthe\Desktop\MVC-Framework\app\views/task/test.blade.php ENDPATH**/ ?>

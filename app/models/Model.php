@@ -36,25 +36,28 @@ abstract class Model
         return $result;
     }
 
-    public function insert($data = [])
+    public function insert($data = [], &$newId)
     {
         $this->beforeInsert();
-        $this->db->insert($data);
+        $result = $this->db->insert($data, $newId);
         $this->afterInsert();
+        return $result;
     }
 
     public function update($id, $data = [])
     {
         $this->beforeUpdate();
-        $this->db->update($id, $data);
+        $result = $this->db->update($id, $data);
         $this->afterUpdate();
+        return $result;
     }
 
     public function delete($id)
     {
         $this->beforeDelete();
-        $this->db->delete($id);
+        $result = $this->db->delete($id);
         $this->afterDelete();
+        return $result;
     }
 
     public function getById($id)

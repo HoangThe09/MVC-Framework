@@ -1,6 +1,8 @@
 <?php
 namespace libs;
 
+use Jenssegers\Blade\Blade;
+
 class View
 {
     public static function render($view, $data = [])
@@ -12,5 +14,14 @@ class View
         }else{
             throw new \Exception("<br> View $file not found", 404);
         }
+    }
+
+    public static function renderTemplate($template, $data = [])
+    {
+        static $blade = null;
+        if ($blade === null) {
+            $blade = new Blade(dirname(__DIR__).'\app\views', dirname(__DIR__).'\cache');
+        }
+        echo $blade->make($template, $data)->render();
     }
 }

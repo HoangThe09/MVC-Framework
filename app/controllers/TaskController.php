@@ -9,10 +9,7 @@ class TaskController extends Controller
     {
         $taskRepo = new TaskRepository;
         $tasks = $taskRepo->getList();
-        // echo'<pre>';
-        // print_r($tasks);
-        // echo '</pre>';
-        
+        $this->render('task/index', ['tasks' => $tasks]);
     }
 
     public function add()
@@ -25,16 +22,28 @@ class TaskController extends Controller
 
     public function stored()
     {
+        $title = $this->getParam('title');
+        $description = $this->getParam('description');
+        $expiration = $this->getParam('expiration');
         $taskRepo = new TaskRepository;
+        $id = '';
         $data = [
-            'title' => 'title',
-            'description' => 'description',
-            'expiration_time' => date('Y-m-d H:i:s'),
+            'title' => $title,
+            'description' => $description,
+            'expiration_time' => $expiration,
             'created_time' => date('Y-m-d H:i:s'),
             'updated_time' => date('Y-m-d H:i:s'),
         ];
-        echo __METHOD__;
-        // $taskRepo->stored($data);
+        if(!$title || !$description || $expiration){
+            echo 0;
+            return 0;
+        }
+        if($taskRepo->stored($data, $id)){
+            $tasks = $taskRepo->getList();
+             $this->render('task/list', ['tasks' => $tasks]);
+        }else{
+            echo 0;
+        }
     }
 
     public function edit()
@@ -42,27 +51,42 @@ class TaskController extends Controller
         $taskRepo = new TaskRepository;
         $id = $this->getParam('id');
         $task = $taskRepo->getById($id);
-        echo'<pre>';
-        print_r($task);
-        echo '</pre>';
+        echo json_encode($task);
     }
 
-    public function updated()
+    public function update()
     {
         $taskRepo = new TaskRepository;
         $id = $this->getParam('id');
+        $title = $this->getParam('title');
+        $description = $this->getParam('description');
+        $expiration = $this->getParam('expiration');
         $data = [
-            'title' => 'title',
-            'description' => 'description',
-            'expiration_time' => date('Y-m-d H:i:s'),
+            'title' => $title,
+            'description' => $description,
+            'expiration_time' => $expiration,
             'created_time' => date('Y-m-d H:i:s'),
             'updated_time' => date('Y-m-d H:i:s'),
         ];
-        // $taskRepo->update($id, $data);
+        if($taskRepo->update($id, $data)){
+            $data['id'] = $id;
+            echo json_encode($data);
+        }else{
+            echo 0;
+        }
     }
 
     public function delete()
     {
-
+        $taskRepo = new TaskRepository;
+        $id = $this->getParam('id');
+        $tasks = $taskRepo->getList(['id'], ['id', $id]);
+        if($taskRepo->delete($id) && $tasks){
+            $tasks = $taskRepo->getList();
+             $this->render('task/list', ['tasks' => $tasks]);
+        }else{
+            echo 0;
+        }
+        
     }
 }

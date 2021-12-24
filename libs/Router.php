@@ -1,13 +1,16 @@
 <?php
 
 namespace libs;
+
 use app\middleware\LogMiddleware;
+use app\middleware\CheckLogin;
+
 class Router
 {
     protected static $routes = [];
     protected static $params = [];
     protected static $method = [];
-
+    protected static $routesGroup = [];
     /**
      * Add a route to the routing table
      * 
@@ -55,6 +58,29 @@ class Router
         static::addRoute('POST', $uri, $params, $middleware);
     }
 
+    public static function group($option, $callback)
+    {
+        $routes = static::$routes;
+        static::$routes = [];
+        if(is_callable($callback)){
+            $callback();
+        }
+        $newRoutes = [];
+        foreach(static::$routes as $pattern => $params){
+            if(isset($option['middleware'])){
+                foreach($params as &$param){
+                    $param['middleware'] = array_unique(array_merge($param['middleware'], $option['middleware']));
+                }
+            }
+            if(isset($option['prefix'])){
+                $prefix = $option['prefix'];
+                $pattern = str_replace('^',"^\/$prefix",$pattern);
+            }
+            $newRoutes[$pattern] = $params;
+        }
+        static::$routes = array_merge($routes, $newRoutes);
+    }
+
     /**
      * get all the routes from the routing table
      */
@@ -68,16 +94,18 @@ class Router
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         try {
             foreach (static::$routes as $route => $params) {
-                if (preg_match($route, $url, $matches) && isset($params[$requestMethod])) {
-                    foreach ($matches as $key => $value) {
-                        if (is_string($key)) {
-                            $params[$requestMethod][$key] = $value;
+                if (preg_match($route, $url, $matches)) {
+                    if(isset($params[$requestMethod])){
+                        foreach ($matches as $key => $value) {
+                            if (is_string($key)) {
+                                $params[$requestMethod][$key] = $value;
+                            }
                         }
+                        static::$params = $params[$requestMethod];
+                        return true;
+                    }else{
+                        throw new HandleException("The $requestMethod method is not supported for this route");
                     }
-                    static::$params = $params[$requestMethod];
-                    return true;
-                }else if(!isset($params[$requestMethod])){
-                    throw new HandleException("The $requestMethod method is not supported for this route");
                 }
             }
             return false;
@@ -103,14 +131,13 @@ class Router
                 $middlewareArr = static::$params['middleware'] ?? null;
                 if($middlewareArr){
                     foreach($middlewareArr as $middleware){
-                        $middleware = static::convertToStudlyCaps($middleware);
                         $middlewareObj = new $middleware;
                         $middlewareObj->action(static::$params);
                     }
                 }
                 $controller = static::$params['controller'];
                 $namespace = static::getNamespace();
-                $controller = $namespace . static::convertToStudlyCaps($controller);
+                $controller = $namespace . (static::convertToStudlyCaps($controller));
                 if (class_exists($controller)) {
                     $controller_obj = new $controller(static::$params);
                     $action = static::$params['action'];
@@ -143,7 +170,7 @@ class Router
 
     public static function getNamespace()
     {
-        $namespace = "App\Controllers\\";
+        $namespace = "app\Controllers\\";
         if (array_key_exists('namespace', static::$params)) {
             $namespace .= ucfirst(static::$params['namespace']) . '\\';
         }
