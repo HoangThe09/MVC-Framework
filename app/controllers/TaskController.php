@@ -27,12 +27,13 @@ class TaskController extends Controller
         $expiration = $this->getParam('expiration');
         $taskRepo = new TaskRepository;
         $id = '';
+        $date = date('Y-m-d H:i:s');
         $data = [
             'title' => $title,
             'description' => $description,
             'expiration_time' => $expiration,
-            'created_time' => date('Y-m-d H:i:s'),
-            'updated_time' => date('Y-m-d H:i:s'),
+            'created_time' => $date,
+            'updated_time' => $date,
         ];
         if(!$title || !$description || $expiration){
             echo 0;
@@ -61,12 +62,12 @@ class TaskController extends Controller
         $title = $this->getParam('title');
         $description = $this->getParam('description');
         $expiration = $this->getParam('expiration');
+        $date = date('Y-m-d H:i:s');
         $data = [
             'title' => $title,
             'description' => $description,
             'expiration_time' => $expiration,
-            'created_time' => date('Y-m-d H:i:s'),
-            'updated_time' => date('Y-m-d H:i:s'),
+            'updated_time' => $date,
         ];
         if($taskRepo->update($id, $data)){
             $data['id'] = $id;
