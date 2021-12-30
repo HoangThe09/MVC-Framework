@@ -59,8 +59,10 @@ class DB
     {
         $sql = "SELECT * FROM $this->table WHERE id = $id";
         $statements = $this->executeQuery($sql);
-        $result = $statements->fetch(PDO::FETCH_ASSOC);
-        return $result;
+        if($statements){
+            $result = $statements->fetch(PDO::FETCH_ASSOC);
+            return $result;
+        }
     }
 
     /**

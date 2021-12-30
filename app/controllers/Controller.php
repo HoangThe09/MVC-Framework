@@ -12,6 +12,7 @@ abstract class Controller
         foreach($_REQUEST as $key => $value){
             $params[$key] = $value;
         }
+        
         $this->params = $params;
     }
 

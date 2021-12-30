@@ -28,23 +28,13 @@
                     <hr class="my-4">
                     <div class="d-flex justify-content-end align-items-center mb-4 pt-2 pb-3">
                         <button type="button" onclick="Task.add()" data-bs-toggle="modal" data-bs-target="#task_detail" class="btn btn-primary btn-sm me-2">Add new</button>
-                        <!-- <p class="small mb-0 me-2 text-muted">Filter</p>
-                        <select class="select">
-                            <option value="1">All</option>
-                            <option value="2">Completed</option>
-                            <option value="3">Active</option>
-                            <option value="4">Has due date</option>
-                        </select>
-                        <p class="small mb-0 ms-4 me-2 text-muted">Sort</p>
-                        <select class="select">
-                            <option value="1">Added date</option>
-                            <option value="2">Due date</option>
-                        </select>
-                        <a href="#!" style="color: #23af89;" data-mdb-toggle="tooltip" title="Ascending"><i class="fas fa-sort-amount-down-alt ms-2"></i></a> -->
                     </div>
-                    <div class="list__tasks">
-                        @yield ('list')
-                    </div>
+                    <div class="list__tasks"></div>
+                    <script>
+                        window.onload = function (){
+                            Task.renderList();
+                        }
+                    </script>
                 </div>
             </div>
         </div>

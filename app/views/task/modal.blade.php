@@ -8,16 +8,20 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label" id = "label_title">Title</label>
-                    <input type="hidden" id = "id-task" class="form-control" name="id">
+                    <label class="form-label" id="label_description">Status</label>
+                    <input type="checkbox" id="status" name="status"></input>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" id="label_title">Title</label>
+                    <input type="hidden" id="id-task" class="form-control" name="id">
                     <input type="text" id="title" class="form-control" name="title">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" id = "label_description">Description</label>
+                    <label class="form-label" id="label_description">Description</label>
                     <textarea class="form-control" id="description" name="description"></textarea>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" id = "label_expiration">Expiration</label>
+                    <label class="form-label" id="label_expiration">Expiration</label>
                     <input type="date" class="form-control" id="expiration" name="expiration">
                 </div>
             </div>

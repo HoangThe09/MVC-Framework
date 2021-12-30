@@ -1,13 +1,14 @@
 var Task = {
+    list : document.querySelector('.list__tasks'),
     modalDel : document.querySelector('#task_delete'),
     modalDetail : {
+        status : document.querySelector('#task_detail #status'),
         heading : document.querySelector('#task_detail h5'),
         idInput : document.querySelector('#task_detail #id-task'),
         titleInput : document.querySelector('#task_detail #title'),
         descriptionInput : document.querySelector('#task_detail #description'),
         expirationInput : document.querySelector('#task_detail #expiration'),
     },
-
 
     add : function (){
         this.renderModal('Add new task')
@@ -21,15 +22,16 @@ var Task = {
             dataType: 'html',
         }).done(function (data){
             data = JSON.parse(data);
-            Task.renderModal(data.title, data.id, data.title, data.description, data.expiration_time);
+            Task.renderModal(data.title, data.status, data.id, data.title, data.description, data.expiration_time);
         })
     },
 
-    renderModal : function (head, id = '', title = '', description = '', expiration = '') {
+    renderModal : function (head, status = 0,id = '', title = '', description = '', expiration = '') {
+        this.modalDetail.status.checked = status != 0 ? true : false;
         this.modalDetail.heading.innerHTML = head;
         this.modalDetail.idInput.value = id;
-        this.modalDetail.titleInput.value = title;
-        this.modalDetail.descriptionInput.value = description;
+        this.modalDetail.titleInput.value = title != '' ? $.parseHTML(title)[0].data : '';
+        this.modalDetail.descriptionInput.innerHTML = description != '' ? $.parseHTML(description)[0].data : '';
         this.modalDetail.expirationInput.value = expiration.slice(0, 10);
     },
 
@@ -37,6 +39,7 @@ var Task = {
         var id = this.modalDetail.idInput.value;
         var data = {
             title : this.modalDetail.titleInput.value,
+            status : this.modalDetail.status.checked ? 1 : 0,
             description : this.modalDetail.descriptionInput.value,
             expiration : this.modalDetail.expirationInput.value
         }
@@ -51,40 +54,76 @@ var Task = {
         $.ajax({
             url: '\\tasks',
             type: 'POST',
-            dataType: 'html',
+            dataType: 'json',
             data: data
-        }).done(function (data){
-            if(data != 0){
-                document.querySelector('.list__tasks').innerHTML = data;
+        }).done(function (response){
+            if(response == "success"){
+                Task.renderList();
                 e.previousElementSibling.click();
-            }else{
-                alert('failed');
             }
+        }).fail(function (response){
+            alert(JSON.parse(response.responseText).message);
         })
     },
 
     updateTask : function (id, data, e){
         $.ajax({
             url: '\\tasks\\'+id,
-            type: 'POST',
-            dataType: 'html',
+            type: 'PUT',
+            dataType: 'json',
             data: data
-        }).done(function (data){
-            if(data){
-                data = JSON.parse(data);
-                document.querySelector(`#task_${data.id}`).innerHTML = data.title;
+        }).done(function (response){
+            if(response){
+                document.querySelector(`#task_${response.id}`).innerHTML = response.title;
+                document.querySelector(`#status__${response.id}`).checked = response.status != 0 ? true : false;
                 e.previousElementSibling.click();
             }
-            
+        }).fail(function (response) {
+            alert(JSON.parse(response.responseText).message);
+        })
+    },
+
+    updateStatus : function (e)
+    {
+        var id = e.getAttribute('data-id');
+        var data = {
+            status : e.checked ? 1 : 0,
+        }
+        $.ajax({
+            url: '\\tasks\\'+id,
+            type: 'PATCH',
+            dataType: 'json',
+            data: data
+        }).fail(function (response){
+            alert(response.message);
+        })
+    },
+
+    renderList : function (){
+        $.ajax({
+            url: '\\tasks\\',
+            type: 'GET',
+            dataType: 'json',
+        }).done(function (data){
+            if(data){
+                Task.list.innerHTML = '';
+                for(var i = data.length - 1; i >= 0; i--){
+                    Task.renderItem(data[i]);
+                }
+            }else{
+                Task.list.innerHTML = `<h2 class="text-info text-center">Empty</h2>`;
+            }
+        }).fail(function (data){
+            alert(data.responseText.message);
         })
     },
 
     renderItem: function (data){
-        var list = document.querySelector('.list__tasks')
+        var checked = data.status != 0 ? 'checked' : '';
         var item =  
         `<div class="item__task" id="item_${data.id}">
         <div class="status__checkbox">
-            <input type="checkbox" class="form-check-input me-0">
+            <input type="checkbox" id="status__${data.id}" data-id = "${data.id}" class="form-check-input me-0" ${checked} onclick="Task.updateStatus(this)" value = "1">
         </div>
         <div class="tasks__title">
             <p class="lead fw-normal mb-0" id = "task_${data.id}">${data.title}</p>
@@ -103,7 +142,7 @@ var Task = {
             </div>
         </div>
     </div>`
-        list.innerHTML = item + list.innerHTML;
+        this.list.innerHTML = item + this.list.innerHTML;
     },
 
     delete : function (e){
@@ -111,9 +150,8 @@ var Task = {
         $.ajax({
             url: '\\tasks\\'+id,
             type: 'GET',
-            dataType: 'html',
+            dataType: 'json',
         }).done(function (data){
-            data = JSON.parse(data);
             Task.renderModalDel(data);
         })
     },
@@ -124,19 +162,18 @@ var Task = {
     },
 
     deleteTask : function (e){
-        id = this.modalDel.querySelector('#delete_id').value;
+        var id = this.modalDel.querySelector('#delete_id').value;
         $.ajax({
-            url: '\\tasks\\delete\\'+id,
-            type: 'GET',
-            dataType: 'html',
+            url: '\\tasks\\'+id,
+            type: 'DELETE',
+            dataType: 'json',
         }).done(function (data){
-            if(data != 0){
-                document.querySelector('.list__tasks').innerHTML = data;
+            if(data === "success"){
+                Task.renderList();
                 e.previousElementSibling.click();
-            }else{
-                alert('delete fail');
             }
+        }).fail(function (response){
+            alert(JSON.parse(response.responseText).message);
         })
     }
 }
-

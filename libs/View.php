@@ -12,7 +12,7 @@ class View
         if(file_exists($file)){
             require $file;
         }else{
-            throw new \Exception("<br> View $file not found", 404);
+            throw new \libs\HandleException("<br> View $file not found", 404);
         }
     }
 
