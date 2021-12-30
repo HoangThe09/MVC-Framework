@@ -18,9 +18,9 @@
         <div id="modal">
             @include('task.modal')
         </div>
-        <div class="main container py-5 h-100">
+        <div class="main container h-100">
             <div class="card" style="border-radius: .75rem; background-color: #eff1f2;">
-                <div class="card-body py-4 px-4 px-md-5">
+                <div class="card-body py-4 px-4 px-md-5" >
                     <p class="h1 text-center mt-3 mb-4 pb-3 text-primary">
                         <i class="fas fa-check-square me-1"></i>
                         <u>My Todo-s</u>

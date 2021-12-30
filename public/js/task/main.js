@@ -31,7 +31,7 @@ var Task = {
         this.modalDetail.heading.innerHTML = head;
         this.modalDetail.idInput.value = id;
         this.modalDetail.titleInput.value = title != '' ? $.parseHTML(title)[0].data : '';
-        this.modalDetail.descriptionInput.innerHTML = description != '' ? $.parseHTML(description)[0].data : '';
+        this.modalDetail.descriptionInput.value = description != '' ? $.parseHTML(description)[0].data : '';
         this.modalDetail.expirationInput.value = expiration.slice(0, 10);
     },
 
@@ -105,7 +105,7 @@ var Task = {
             type: 'GET',
             dataType: 'json',
         }).done(function (data){
-            if(data){
+            if(data.length){
                 Task.list.innerHTML = '';
                 for(var i = data.length - 1; i >= 0; i--){
                     Task.renderItem(data[i]);
