@@ -1,8 +1,8 @@
 <?php
 
-use app\middleware\LogMiddleware;
-use app\middleware\CheckData;
 use libs\Router;
+use app\middleware\CheckData;
+use app\controllers\TaskController;
 
 Router::get('/', [TaskController::class, 'index']);
 

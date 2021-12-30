@@ -2,15 +2,10 @@
 
 namespace libs;
 
-use app\middleware\LogMiddleware;
-use app\middleware\CheckLogin;
-
 class Router
 {
     protected static $routes = [];
     protected static $params = [];
-    protected static $method = [];
-    protected static $routesGroup = [];
     /**
      * Add a route to the routing table
      * 
@@ -158,8 +153,6 @@ class Router
                 }
             }
             $controller = static::$params['controller'];
-            $namespace = static::getNamespace();
-            $controller = $namespace . (static::convertToStudlyCaps($controller));
             if (class_exists($controller)) {
                 $controller_obj = new $controller(static::$params);
                 $action = static::$params['action'];
@@ -177,22 +170,8 @@ class Router
         }
     }
 
-    public static function convertToStudlyCaps($string)
-    {
-        return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
-    }
-
     public static function convertToCamelCase($string)
     {
-        return lcfirst(static::convertToStudlyCaps($string));
-    }
-
-    public static function getNamespace()
-    {
-        $namespace = "app\Controllers\\";
-        if (array_key_exists('namespace', static::$params)) {
-            $namespace .= ucfirst(static::$params['namespace']) . '\\';
-        }
-        return $namespace;
+        return lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', $string))));
     }
 }

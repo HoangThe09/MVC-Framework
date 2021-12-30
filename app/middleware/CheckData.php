@@ -18,6 +18,8 @@ class CheckData extends Middleware
         
         if($message != null){
             throw new \libs\HandleException($message, 400);
+        }else{
+            return true;
         }
     }
 }
